@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify, render_template, send_from_directory,
 import yt_dlp
 import os
 import ffmpeg
+import time
 
 app = Flask(__name__)
 
@@ -60,6 +61,7 @@ def download_video():
             'outtmpl': os.path.join(DOWNLOAD_PATH, '%(title)s.%(ext)s'),
             'format': f'{format_id}+bestaudio/best',
             'merge_output_format': 'mp4',
+            time.sleep(10),
         }
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
