@@ -57,11 +57,12 @@ def download_video():
 
     try:
         # إعدادات yt-dlp لتنزيل الفيديو والصوت
+        time.sleep(5)
         ydl_opts = {
             'outtmpl': os.path.join(DOWNLOAD_PATH, '%(title)s.%(ext)s'),
             'format': f'{format_id}+bestaudio/best',
             'merge_output_format': 'mp4',
-            time.sleep(5),
+            
         }
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
