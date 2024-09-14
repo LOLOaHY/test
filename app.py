@@ -58,7 +58,7 @@ def download_video():
         # إعدادات yt-dlp لتنزيل الفيديو والصوت
         ydl_opts = {
             'outtmpl': os.path.join(DOWNLOAD_PATH, '%(title)s.%(ext)s'),
-            'format': 'bestvideo+bestaudio/best',
+            'format': f'{format_id}+bestaudio/best',
             'merge_output_format': 'mp4',
         }
 
