@@ -1,16 +1,686 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Video Downloader</title>
+    <title>موقع تفاعلي</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* إعداد الصفحة */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #ffffff; /* خلفية بيضاء */
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        /* الأشكال */
+        .shape {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* الأشكال الجديدة بألوان شعار جوجل */
+         /* الأشكال الجديدة بألوان شعار جوجل */
+         .shape.red {
+            background-color: #ce0e0e; /* أحمر جوجل */
+        }
+        .shape.blue {
+            background-color: #196ad4; /* أزرق جوجل */
+        }
+        .shape.yellow {
+            background-color: #F4B400; /* أصفر جوجل */
+        }
+        .shape.green {
+            background-color: #048d4b; /* أخضر جوجل */
+        }
+        .shape.gold {
+            background: radial-gradient(circle at top, #FFD700, #FFC107); /* ذهبي */
+        }
+
+        /* أشكال مختلفة */
+        .circle {
+            border-radius: 50%;
+        }
+        .square {
+            /* شكل المربع */
+        }
+        .rectangle {
+            width: 150px;
+            height: 100px;
+        }
+        .parallelogram {
+            width: 100px;
+            height: 100px;
+            transform: skew(20deg);
+        }
+        .cylinder {
+            width: 100px;
+            height: 120px;
+            background: radial-gradient(circle at top, #FFD700, #FFC107);
+            border-radius: 50px;
+            position: relative;
+            overflow: hidden;
+        }
+        .gold-cylinder {
+            width: 100px;
+            height: 120px;
+            background: radial-gradient(circle at top, #FFD700, #FFC107);
+            border-radius: 50px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* الوجوه المحسنة */
+        .face {
+            position: relative;
+            width: 60%;
+            height: 60%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .eye {
+            position: absolute;
+            width: 20%;
+            height: 20%;
+            background-color: white;
+            border-radius: 50%;
+            border: 2px solid black;
+        }
+        .eye.left {
+            left: 20%;
+        }
+        .eye.right {
+            right: 20%;
+        }
+        .mouth {
+            position: absolute;
+            bottom: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40%;
+            height: 20%;
+            border-bottom: 4px solid black;
+            border-radius: 0 0 50% 50%;
+            background: transparent;
+        }
+
+        /* حركة الضحك */
+        .face {
+            animation: laugh 2s infinite;
+        }
+        @keyframes laugh {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        /* حركة الأشكال */
+        @keyframes moveCircle {
+            0% { transform: translate(0, 0); }
+            25% { transform: translate(200px, -50px); }
+            50% { transform: translate(400px, 0); }
+            75% { transform: translate(200px, 50px); }
+            100% { transform: translate(0, 0); }
+        }
+
+        @keyframes moveSquare {
+            0% { transform: translate(0, 0); }
+            25% { transform: translate(-200px, 100px); }
+            50% { transform: translate(-400px, 0); }
+            75% { transform: translate(-200px, -100px); }
+            100% { transform: translate(0, 0); }
+        }
+
+        @keyframes moveRectangle {
+            0% { transform: translate(0, 0); }
+            25% { transform: translate(150px, 200px); }
+            50% { transform: translate(300px, 100px); }
+            75% { transform: translate(150px, 300px); }
+            100% { transform: translate(0, 0); }
+        }
+
+        @keyframes moveParallelogram {
+            0% { transform: translate(0, 0); }
+            25% { transform: translate(-150px, -100px); }
+            50% { transform: translate(-300px, -200px); }
+            75% { transform: translate(-150px, 50px); }
+            100% { transform: translate(0, 0); }
+        }
+
+        @keyframes moveCylinder {
+            0% { transform: translate(0, 0); }
+            25% { transform: translate(200px, -150px); }
+            50% { transform: translate(400px, -300px); }
+            75% { transform: translate(200px, 150px); }
+            100% { transform: translate(0, 0); }
+        }
+
+        @keyframes moveGoldCylinder {
+            0% { transform: translate(0, 0); }
+            25% { transform: translate(-200px, -150px); }
+            50% { transform: translate(-400px, -300px); }
+            75% { transform: translate(-200px, 150px); }
+            100% { transform: translate(0, 0); }
+        }
+
+        /* إعدادات التحريك لكل شكل */
+        .shape.circle {
+            animation: moveCircle 10s infinite ease-in-out;
+            top: 10%;
+            left: 10%;
+        }
+        .shape.square {
+            animation: moveSquare 12s infinite ease-in-out;
+            top: 30%;
+            left: 50%;
+        }
+        .shape.rectangle {
+            animation: moveRectangle 14s infinite ease-in-out;
+            top: 50%;
+            left: 20%;
+        }
+        .shape.parallelogram {
+            animation: moveParallelogram 16s infinite ease-in-out;
+            top: 70%;
+            left: 60%;
+        }
+        .shape.cylinder {
+            animation: moveCylinder 18s infinite ease-in-out;
+            top: 40%;
+            left: 70%;
+        }
+        .shape.gold-cylinder {
+            animation: moveGoldCylinder 20s infinite ease-in-out;
+            top: 60%;
+            left: 50%;
+        }
+
+        /* تمركز حقل الإدخال والزر */
+        .input-container {
+            position: absolute;
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+            z-index: 10;
+        }
+        input[type="text"] {
+            padding: 15px;
+            font-size: 18px;
+            border-radius: 5px;
+            border: 2px solid #4285F4;
+            width: 300px;
+            text-align: center; 
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #f3ab26;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            position: absolute;
+            top: 110%;   /* تعديل هذه القيم لتحديد المكان المناسب */
+            left: center; 
+        }
+        button:hover {
+            background-color: #0F9D58;
+            transform: scale(1.05);
+        }
+
+        .butsub {
+            background-color: #085bd8;
+            
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            position: absolute;
+            top: 250%;   /* تعديل هذه القيم لتحديد المكان المناسب */
+            left: center;
+        }
+        .butsub:hover {
+            background-color: #0F9D58;
+            transform: scale(1.05);
+        }
+
+        .qulit_lab{
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #085bd8;
+            position: absolute;
+            top: 155%;   /* تعديل هذه القيم لتحديد المكان المناسب */
+            left: center;
+        }
+
+
+        .input-label {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #085bd8;
+        }
+        .qulit_selc{
+            padding: 15px;
+            font-size: 18px;
+            
+            background-color:white;
+            text-align-last: center;
+            border-radius: 5px;
+            border: 2px solid #4285F4;
+            width: 220px;
+            box-sizing: border-box;
+            position: absolute;
+            top: 190%;   /* تعديل هذه القيم لتحديد المكان المناسب */
+            left: center;
+        }
+
+        /* الرسائل */
+        .message {
+            position: absolute;
+            bottom: 11%;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #f4f4f4;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            font-size: 18px;
+            color: #333;
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .message.success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+
+        .message.error {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+
+        .message.pending {
+            background-color: #fff3cd;
+            border-color: #ffeeba;
+            color: #856404;
+        }
+        /* اللوجوهات */
+        .logo {
+            width: 50px;
+            height: 50px;
+            position: absolute;
+            bottom: 10px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        .instgrem-logo {
+            background-image: url('/static/social.png');
+            bottom: 1%;
+            left: 7%;
+        }
+        .facebook-logo {
+            background-image: url('/static/facebook.png');
+            bottom: 1%;
+            left: 26%;
+        }
+        .youtube-logo {
+            background-image: url('/static/youtube.png');
+            bottom: 1%;
+            left: 47%;
+        }
+        .twitter-logo {
+            background-image: url('/static/twitter.png');
+            bottom: 1%;
+            right: 26%;
+        }
+        .tiktok-logo {
+            background-image: url('/static/tiktok.png');
+            bottom: 1%;
+            right: 7%;
+        }
+        
+        
+        
+        /* فيديو */
+        .video-container {
+            position: absolute;
+            overflow: hidden;
+            border-radius: 15px; /* شكل الحاوية (مستدير الأطراف) */
+            box-shadow: 0 0 10px rgb(255, 255, 255);
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* ضبط الفيديو لملء الحاوية بالكامل */
+            pointer-events: none; /* منع التفاعل مع الفيديو */
+        }
+
+        /* تحديد موقع كل فيديو */
+        .video1 {
+            top: 4%;
+            left: 4%;
+            width: 70px;
+            height: 60px;
+            background: #ffffff;
+        }
+        .video2 {
+            top: 6%;
+            right: 6%;
+            width: 70px;
+            height: 60px;
+            background: #ffffff;
+        }
+        .video3 {
+            bottom: 55%;
+            right: 7%;
+            width:90px;
+            height: 70px;
+            background: #ffffff;
+        }
+        .video4 {
+            bottom: 53%;
+            left: 6%;
+            width: 70px;
+            height: 60px;
+            background: #ffffff;
+        }
+        .video5 {
+            bottom: 36%;
+            right: 9%;
+            width: 70px;
+            height: 60px;
+            background: #ffffff;
+        }
+        .video6 {
+            bottom: 32%;
+            left: 4%;
+            width: 70px;
+            height: 60px;
+            background: #ffffff;
+        }
+        .video7 {
+            bottom: 20%;
+            left: 25%;
+            width: 75px;
+            height: 65px;
+            background: #ffffff;
+        }
+        .video8 {
+            bottom: 20%;
+            left: 55%;
+            width: 80px;
+            height: 70px;
+            background: #ffffff;
+        }
+    </style>
 </head>
 <body>
-    <h1>Download Video</h1>
-    <form action="/download" method="post">
-        <label for="url">Enter Video URL:</label>
-        <input type="text" id="url" name="url" required>
-        <button type="submit">Download</button>
-    </form>
+        <!-- الأشكال المتحركة -->
+        <div class="shape circle red">
+            <div class="face">
+                <div class="eye left"></div>
+                <div class="eye right"></div>
+                <div class="mouth"></div>
+            </div>
+        </div>
+
+        <div class="shape square blue">
+            <div class="face">
+                <div class="eye left"></div>
+                <div class="eye right"></div>
+                <div class="mouth"></div>
+            </div>
+        </div>
+
+        <div class="shape rectangle yellow">
+            <div class="face">
+                <div class="eye left"></div>
+                <div class="eye right"></div>
+                <div class="mouth"></div>
+            </div>
+        </div>
+
+        <div class="shape parallelogram green">
+            <div class="face">
+                <div class="eye left"></div>
+                <div class="eye right"></div>
+                <div class="mouth"></div>
+            </div>
+        </div>
+
+        <div class="shape gold-cylinder">
+            <div class="face">
+                <div class="eye left"></div>
+                <div class="eye right"></div>
+                <div class="mouth"></div>
+            </div>
+        </div>
+
+        <!-- حقل الإدخال والزر -->
+        <div class="input-container">
+            <label class="input-label" for="video-url">:أدخل رابط الفيديو للتنزيل</label>
+            <input type="text" id="video-url" placeholder="رابط الفيديو هنا">
+            <button onclick="fetchFormats()">عرض الجودة المتاحة</button>
+
+            <label  class="qulit_lab" for="quality" >:اختر الجودة</label>
+            <select class="qulit_selc" id="quality" >
+                <option class="qulit_opth" value="">الجودات المتاحة </option>
+            </select>
+            <button onclick="submitUrl()" class="butsub">تحميل</button>
+        </div>
+        
+        <!-- الرسائل -->
+        <div class="message" id="message">حالة التحميل</div>
+
+        <!-- فيديو -->
+        <div class="video-container video1">
+            <video autoplay loop muted>
+                <source src="/static/suuu.mp4" type="video/mp4">
+                المتصفح لا يدعم عرض الفيديو.
+            </video>
+        </div>
+    
+        <div class="video-container video2">
+            <video autoplay loop muted>
+                <source src="/static/hot.mp4" type="video/mp4">
+                المتصفح لا يدعم عرض الفيديو.
+            </video>
+        </div>
+    
+        <div class="video-container video3">
+            <video autoplay loop muted>
+                <source src="/static/wave.mp4" type="video/mp4">
+                المتصفح لا يدعم عرض الفيديو.
+            </video>
+        </div>
+        
+        <div class="video-container video4">
+            <video autoplay loop muted>
+                <source src="/static/island.mp4" type="video/mp4">
+                المتصفح لا يدعم عرض الفيديو.
+            </video>
+        </div>
+        <div class="video-container video5">
+            <video autoplay loop muted>
+                <source src="/static/cocktail.mp4" type="video/mp4">
+                المتصفح لا يدعم عرض الفيديو.
+            </video>
+        </div>
+        <div class="video-container video6">
+            <video autoplay loop muted>
+                <source src="/static/ice-cream.mp4" type="video/mp4">
+                المتصفح لا يدعم عرض الفيديو.
+            </video>
+        </div>
+        <div class="video-container video7">
+            <video autoplay loop muted>
+                <source src="/static/invitation.mp4" type="video/mp4">
+                المتصفح لا يدعم عرض الفيديو.
+            </video>
+        </div>
+        <div class="video-container video8">
+            <video autoplay loop muted>
+                <source src="/static/water-slide.mp4" type="video/mp4">
+                المتصفح لا يدعم عرض الفيديو.
+            </video>
+        </div>
+        <!-- اللوجوهات -->
+        <div class="logo tiktok-logo"></div>
+        <div class="logo facebook-logo"></div>
+        <div class="logo youtube-logo"></div>
+        <div class="logo twitter-logo"></div>
+        <div class="logo instgrem-logo"></div>
+        
+    </div>
+    
+    <script>
+        function fetchFormats() {
+            const url = document.getElementById('video-url').value;
+            const messageElement = document.getElementById('message');
+            const qualityOptionsElement = document.getElementById('quality');
+            
+            if (!qualityOptionsElement) {
+                console.error('Element with id "quality" not found.');
+                return;
+            }
+            messageElement.className = 'message pending';
+            messageElement.innerText = 'جاري الحصول علي الجودة...';
+
+            fetch(`/get_formats?url=${encodeURIComponent(url)}`)
+            
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok.');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const qualitySelect = document.getElementById('quality');
+                if (!qualitySelect) {
+                    console.error('Element with id "quality" not found.');
+                    return;
+                }
+                qualitySelect.innerHTML = '';
+
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+
+                data.forEach(format => {
+                    const option = document.createElement('option');
+                    option.value = format.format_id;
+                    option.textContent = `${format.resolution} - ${format.filesize ? (format.filesize / (1024 * 1024)).toFixed(2) + ' MB' : 'غير متاح حجم الملف'}`;
+                    qualitySelect.appendChild(option);
+                });
+
+                qualityOptionsElement.style.display = 'block';
+
+                messageElement.className = 'message success';
+                messageElement.innerText = 'تم الحصول علي الجودة';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                if (messageElement) {
+                    messageElement.className = 'message error';
+                    messageElement.innerText = `حدث خطأ أثناء عرض الجودة: ${error.message}`;
+                }
+            });
+        }
+
+        function submitUrl() {
+            const url = document.getElementById('video-url').value;
+            const messageElement = document.getElementById('message');
+
+            if (!messageElement) {
+                console.error('Element with id "message" not found.');
+                return;
+            }
+
+            messageElement.className = 'message pending';
+            messageElement.innerText = 'جاري التحميل...';
+
+            fetch('/download', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({
+                    'url': url
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.text().then(text => {
+                        throw new Error(`Network response was not ok. Status: ${response.status}. Text: ${text}`);
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+
+                var link = document.createElement('a');
+                link.href = data.url;
+                link.download = data.filename;
+                link.click();
+
+                messageElement.className = 'message success';
+                messageElement.innerText = 'تم تنزيل الفيديو!';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                messageElement.className = 'message error';
+                messageElement.innerText = `حدث خطأ أثناء التحميل: ${error.message}`;
+            });
+        }
+
+
+    </script>
+    
+    
+    
+    
+
 </body>
 </html>
