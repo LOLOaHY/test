@@ -28,7 +28,7 @@ def get_formats():
     try:
         ydl_opts = {
             'cookies': 'cookies.json',
-            'quiet': True
+            
         }
         logging.info("Available formats: %s", formats)
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
