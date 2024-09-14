@@ -24,7 +24,7 @@ def get_formats():
     url = request.args.get('url')
     if not url:
         return jsonify({'error': 'رابط الفيديو مفقود'}), 400
-
+    formats = None
     try:
         ydl_opts = {
             'cookies': 'cookies.json',
