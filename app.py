@@ -9,7 +9,7 @@ app = Flask(__name__)
 DOWNLOAD_PATH = os.path.join(os.path.dirname(__file__), 'uploads')
 if not os.path.exists(DOWNLOAD_PATH):
     os.makedirs(DOWNLOAD_PATH)
-
+PROXY = ""
 @app.route('/')
 def index():
     return render_template('index.html')  # صفحة HTML تحتوي على حقل إدخال وزر للتنزيل
@@ -21,12 +21,8 @@ def get_formats():
         return jsonify({'error': 'رابط الفيديو مفقود'}), 400
 
     try:
-        username = 'ejekdjdjed@gmail.com'
-        password = 'asdfghjkl22@hotmail.com'
-        ydl_opts = {
-            'username': username,
-            'password': password,
-        }
+
+        ydl_opts = { 'proxy': PROXY,}
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info_dict = ydl.extract_info(url, download=False)
             formats = info_dict.get('formats', [])
@@ -61,14 +57,12 @@ def download_video():
 
     try:
         # إعدادات yt-dlp لتنزيل الفيديو والصوت
-        username = 'ejekdjdjed@gmail.com'
-        password = 'asdfghjkl22@hotmail.com'
+        
         ydl_opts = {
-            'username': username,
-            'password': password,
             'outtmpl': os.path.join(DOWNLOAD_PATH, '%(title)s.%(ext)s'),
             'format': f'{format_id}+bestaudio/best',
             'merge_output_format': 'mp4',
+             'proxy': PROXY,
         }
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
