@@ -3,6 +3,10 @@ import yt_dlp
 import os
 import ffmpeg
 import time
+import logging
+
+logging.basicConfig(level=logging.DEBUG, filename='yt-dlp.log')
+
 app = Flask(__name__)
 
 # المسار الذي سيتم حفظ الفيديوهات فيه
@@ -46,6 +50,7 @@ def get_formats():
         return jsonify(format_list)
 
     except Exception as e:
+        logging.error(f"Error: {str(e)}")
         return jsonify({'error': f"حدث خطأ أثناء جلب الجودات: {str(e)}"}), 500
 
 
@@ -98,8 +103,10 @@ def download_video():
         })
 
     except yt_dlp.DownloadError as e:
+        logging.error(f"Error: {str(e)}")
         return jsonify({'error': f"حدث خطأ أثناء التحميل باستخدام yt-dlp: {str(e)}"}), 500
     except Exception as e:
+        logging.error(f"Error: {str(e)}")
         return jsonify({'error': f"حدث خطأ أثناء التحميل: {str(e)}"}), 500
 
 @app.route('/file/<filename>')
