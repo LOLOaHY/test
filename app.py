@@ -3,8 +3,6 @@ import yt_dlp
 import os
 import ffmpeg
 
-
-
 app = Flask(__name__)
 
 # المسار الذي سيتم حفظ الفيديوهات فيه
@@ -21,12 +19,15 @@ def get_formats():
     url = request.args.get('url')
     if not url:
         return jsonify({'error': 'رابط الفيديو مفقود'}), 400
-    
+
     try:
         ydl_opts = {}
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info_dict = ydl.extract_info(url, download=False)
             formats = info_dict.get('formats', [])
+
+        # سجل جميع الصيغ للتأكد من التفاصيل
+        print("Available formats:", formats)
 
         # قم بإضافة تفاصيل الصيغ لتكون واضحة
         format_list = [
@@ -39,12 +40,11 @@ def get_formats():
             for f in formats
             if f.get("vcodec", "none") != "none"  # فقط للفيديوهات التي تحتوي على كوديك فيديو
         ]
-       
+
         return jsonify(format_list)
 
     except Exception as e:
         return jsonify({'error': f"حدث خطأ أثناء جلب الجودات: {str(e)}"}), 500
-
 
 @app.route('/download', methods=['POST'])
 def download_video():
@@ -66,7 +66,6 @@ def download_video():
             info_dict = ydl.extract_info(url, download=True)
             video_file_path = ydl.prepare_filename(info_dict)
             audio_file_path = video_file_path.rsplit('.', 1)[0] + '.m4a'  # افتراضياً الصوت سيكون بصيغة m4a
-            
 
         # التأكد من وجود الملف النهائي بصيغة mp4
         if not video_file_path.endswith('.mp4'):
@@ -84,8 +83,7 @@ def download_video():
         # تحقق من وجود الملف قبل محاولة إرساله
         if not os.path.isfile(video_file_path):
             return jsonify({'error': 'الملف غير موجود'}), 500
-            
-       
+
         # إنشاء رابط التحميل
         file_url = url_for('download_file', filename=os.path.basename(video_file_path), _external=True)
         return jsonify({
@@ -103,4 +101,4 @@ def download_file(filename):
     return send_from_directory(DOWNLOAD_PATH, filename, as_attachment=True)
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host="0.0.0.0",port="8080",debug=True)
