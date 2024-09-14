@@ -5,7 +5,7 @@ import ffmpeg
 
 
 app = Flask(__name__)
-cookie_file_path = "cookies.txt"
+cookie_file_path = "cookies.json"
 # المسار الذي سيتم حفظ الفيديوهات فيه
 DOWNLOAD_PATH = os.path.join(os.path.dirname(__file__), 'uploads')
 if not os.path.exists(DOWNLOAD_PATH):
