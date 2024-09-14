@@ -4,6 +4,7 @@ import os
 import ffmpeg
 import time
 import logging
+from random import uniform
 
 logging.basicConfig(level=logging.DEBUG, filename='yt-dlp.log')
 
@@ -27,7 +28,9 @@ def get_formats():
     try:
         ydl_opts = {
             'cookies': 'cookies.json',
+            'quiet': True
         }
+        logging.info("Available formats: %s", formats)
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info_dict = ydl.extract_info(url, download=False)
             formats = info_dict.get('formats', [])
@@ -46,7 +49,7 @@ def get_formats():
             for f in formats
             if f.get("vcodec", "none") != "none"  # فقط للفيديوهات التي تحتوي على كوديك فيديو
         ]
-
+        time.sleep(uniform(1, 5))
         return jsonify(format_list)
 
     except Exception as e:
@@ -76,6 +79,7 @@ def download_video():
             info_dict = ydl.extract_info(url, download=True)
             video_file_path = ydl.prepare_filename(info_dict)
             audio_file_path = video_file_path.rsplit('.', 1)[0] + '.m4a'  # افتراضياً الصوت سيكون بصيغة m4a
+            time.sleep(uniform(1, 5))
 
         # التأكد من وجود الملف النهائي بصيغة mp4
         if not video_file_path.endswith('.mp4'):
