@@ -27,8 +27,6 @@ def get_formats():
             info_dict = ydl.extract_info(url, download=False)
             formats = info_dict.get('formats', [])
 
-        # سجل جميع الصيغ للتأكد من التفاصيل
-        print("Available formats:", formats)
 
         # قم بإضافة تفاصيل الصيغ لتكون واضحة
         format_list = [
@@ -56,14 +54,11 @@ def download_video():
     audio_file_path = None
 
     try:
-        # إعدادات yt-dlp لتنزيل الفيديو والصوت
-        
+        # إعدادات yt-dlp لتنزيل الفيديو والصو
         ydl_opts = {
             'outtmpl': os.path.join(DOWNLOAD_PATH, '%(title)s.%(ext)s'),
             'format': f'{format_id}+bestaudio/best',
             'merge_output_format': 'mp4',
-            
-            
         }
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
