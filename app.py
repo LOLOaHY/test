@@ -5,7 +5,7 @@ import ffmpeg
 
 
 app = Flask(__name__)
-
+cookie_file_path = "cookies.txt"
 # المسار الذي سيتم حفظ الفيديوهات فيه
 DOWNLOAD_PATH = os.path.join(os.path.dirname(__file__), 'uploads')
 if not os.path.exists(DOWNLOAD_PATH):
@@ -58,6 +58,7 @@ def download_video():
     try:
         # إعدادات yt-dlp لتنزيل الفيديو والصوت
         ydl_opts = {
+            'cookiesfrombrowser': cookie_file_path,
             'outtmpl': os.path.join(DOWNLOAD_PATH, '%(title)s.%(ext)s'),
             'format': f'{format_id}+bestaudio/best',
             'merge_output_format': 'mp4',
