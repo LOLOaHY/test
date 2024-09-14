@@ -24,7 +24,6 @@ def get_formats():
     
     try:
         ydl_opts = {}
-        logging.info("Available formats: %s", formats)
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info_dict = ydl.extract_info(url, download=False)
             formats = info_dict.get('formats', [])
