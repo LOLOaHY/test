@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify, render_template, send_from_directory,
 import yt_dlp
 import os
 import ffmpeg
-
+import logging
 
 
 logging.basicConfig(level=logging.DEBUG, filename='yt-dlp.log')
