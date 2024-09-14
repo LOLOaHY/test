@@ -22,7 +22,7 @@ def get_formats():
 
     try:
 
-        ydl_opts = { 'proxy': PROXY,}
+        ydl_opts = { 'proxy': PROXY,'impersonate': 'chrome:windows-10',}
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info_dict = ydl.extract_info(url, download=False)
             formats = info_dict.get('formats', [])
@@ -62,7 +62,8 @@ def download_video():
             'outtmpl': os.path.join(DOWNLOAD_PATH, '%(title)s.%(ext)s'),
             'format': f'{format_id}+bestaudio/best',
             'merge_output_format': 'mp4',
-             'proxy': PROXY,
+            'proxy': PROXY,
+            'impersonate': 'chrome:windows-10',
         }
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
