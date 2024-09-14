@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify, render_template, send_from_directory,
 import yt_dlp
 import os
 import ffmpeg
-
+import time
 app = Flask(__name__)
 
 # المسار الذي سيتم حفظ الفيديوهات فيه
@@ -88,7 +88,8 @@ def download_video():
         # تحقق من وجود الملف قبل محاولة إرساله
         if not os.path.isfile(video_file_path):
             return jsonify({'error': 'الملف غير موجود'}), 500
-
+            
+        time.sleep(5)
         # إنشاء رابط التحميل
         file_url = url_for('download_file', filename=os.path.basename(video_file_path), _external=True)
         return jsonify({
