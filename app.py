@@ -2,9 +2,7 @@ from flask import Flask, request, jsonify, render_template, send_from_directory,
 import yt_dlp
 import os
 import ffmpeg
-import time
-import logging
-from random import uniform
+
 
 logging.basicConfig(level=logging.DEBUG, filename='yt-dlp.log')
 
@@ -24,19 +22,13 @@ def get_formats():
     url = request.args.get('url')
     if not url:
         return jsonify({'error': 'رابط الفيديو مفقود'}), 400
-    formats = None
+    
     try:
-        ydl_opts = {
-            'cookies': 'cookies.json',
-            
-        }
+        ydl_opts = {}
         logging.info("Available formats: %s", formats)
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info_dict = ydl.extract_info(url, download=False)
             formats = info_dict.get('formats', [])
-
-        # سجل جميع الصيغ للتأكد من التفاصيل
-        print("Available formats:", formats)
 
         # قم بإضافة تفاصيل الصيغ لتكون واضحة
         format_list = [
@@ -49,7 +41,7 @@ def get_formats():
             for f in formats
             if f.get("vcodec", "none") != "none"  # فقط للفيديوهات التي تحتوي على كوديك فيديو
         ]
-        time.sleep(uniform(1, 5))
+       
         return jsonify(format_list)
 
     except Exception as e:
@@ -68,18 +60,16 @@ def download_video():
     try:
         # إعدادات yt-dlp لتنزيل الفيديو والصوت
         ydl_opts = {
-            'cookies': 'cookies.json',
             'outtmpl': os.path.join(DOWNLOAD_PATH, '%(title)s.%(ext)s'),
             'format': f'{format_id}+bestaudio/best',
             'merge_output_format': 'mp4',
-            
         }
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info_dict = ydl.extract_info(url, download=True)
             video_file_path = ydl.prepare_filename(info_dict)
             audio_file_path = video_file_path.rsplit('.', 1)[0] + '.m4a'  # افتراضياً الصوت سيكون بصيغة m4a
-            time.sleep(uniform(1, 5))
+            
 
         # التأكد من وجود الملف النهائي بصيغة mp4
         if not video_file_path.endswith('.mp4'):
@@ -98,7 +88,7 @@ def download_video():
         if not os.path.isfile(video_file_path):
             return jsonify({'error': 'الملف غير موجود'}), 500
             
-        time.sleep(5)
+       
         # إنشاء رابط التحميل
         file_url = url_for('download_file', filename=os.path.basename(video_file_path), _external=True)
         return jsonify({
