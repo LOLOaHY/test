@@ -21,9 +21,11 @@ def get_formats():
         return jsonify({'error': 'رابط الفيديو مفقود'}), 400
 
     try:
+        username = 'ejekdjdjed@gmail.com'
+        password = 'asdfghjkl22@hotmail.com'
         ydl_opts = {
-            username = 'ejekdjdjed@gmail.com'
-            password = 'asdfghjkl22@hotmail.com'
+            'username': username,
+            'password': password,
         }
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info_dict = ydl.extract_info(url, download=False)
