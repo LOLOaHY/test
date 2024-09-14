@@ -5,7 +5,6 @@ import ffmpeg
 
 app = Flask(__name__)
 
-cookie_file_path = 'cookie_file.json'
 # المسار الذي سيتم حفظ الفيديوهات فيه
 DOWNLOAD_PATH = os.path.join(os.path.dirname(__file__), 'uploads')
 if not os.path.exists(DOWNLOAD_PATH):
@@ -22,9 +21,7 @@ def get_formats():
         return jsonify({'error': 'رابط الفيديو مفقود'}), 400
 
     try:
-        ydl_opts = {
-            'cookiefile': cookie_file_path,
-        }
+        ydl_opts = {}
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info_dict = ydl.extract_info(url, download=False)
             formats = info_dict.get('formats', [])
@@ -61,7 +58,6 @@ def download_video():
     try:
         # إعدادات yt-dlp لتنزيل الفيديو والصوت
         ydl_opts = {
-            'cookiefile': cookie_file_path,
             'outtmpl': os.path.join(DOWNLOAD_PATH, '%(title)s.%(ext)s'),
             'format': f'{format_id}+bestaudio/best',
             'merge_output_format': 'mp4',
