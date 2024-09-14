@@ -22,7 +22,7 @@ def get_formats():
 
     try:
         ydl_opts = {
-            'proxy': 'http://154.239.3.184:8081'
+            'proxy': 'http://154.239.3.184:8081',
         }
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info_dict = ydl.extract_info(url, download=False)
