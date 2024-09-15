@@ -22,7 +22,7 @@ def get_formats():
 
     try:
         ydl_opts = {
-            'cookies':'/workspace/cookies.txt'
+            'cookies':'cookies.txt',
         }
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info_dict = ydl.extract_info(url, download=False)
@@ -59,10 +59,11 @@ def download_video():
     try:
         # إعدادات yt-dlp لتنزيل الفيديو والصوت
         ydl_opts = {
-            'cookies':'\workspace\cookies.txt',
+            
             'outtmpl': os.path.join(DOWNLOAD_PATH, '%(title)s.%(ext)s'),
             'format': 'bastvideo+bestaudio/best',
             'merge_output_format': 'mp4',
+            'cookies':'cookies.txt',
         }
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
