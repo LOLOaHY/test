@@ -21,9 +21,9 @@ def get_formats():
         return jsonify({'error': 'رابط الفيديو مفقود'}), 400
 
     try:
-        cookies_path = 'cookies.txt'
+        cookies_path = os.path.join(os.path.dirname(__file__), 'cookies.txt')  # تأكد من المسار الصحيح
         ydl_opts = {
-            'cookies':cookies_path,
+            'cookies': cookies_path,
         }
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info_dict = ydl.extract_info(url, download=False)
