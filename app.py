@@ -59,7 +59,7 @@ def download_video():
 
     try:
         # إعدادات yt-dlp لتنزيل الفيديو والصوت
-        cookies_path = 'cookies.txt'
+        cookies_path = os.path.join(os.path.dirname(__file__), 'cookies.txt')
         ydl_opts = {
             
             'outtmpl': os.path.join(DOWNLOAD_PATH, '%(title)s.%(ext)s'),
