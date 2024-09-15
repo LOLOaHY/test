@@ -14,25 +14,39 @@ if not os.path.exists(DOWNLOAD_PATH):
 def index():
     return render_template('index.html')  # صفحة HTML تحتوي على حقل إدخال وزر للتنزيل
 
+import subprocess
+
+def run_yt_dlp(url, cookies_path):
+    try:
+        result = subprocess.run(
+            ['yt-dlp', '--cookies', cookies_path, url],
+            capture_output=True,
+            text=True
+        )
+        print(result.stdout)
+        print(result.stderr)
+    except Exception as e:
+        print(f"Error: {str(e)}")
+
 @app.route('/get_formats')
 def get_formats():
     url = request.args.get('url')
     if not url:
         return jsonify({'error': 'رابط الفيديو مفقود'}), 400
 
+    cookies_path = os.path.join(os.path.dirname(__file__), 'cookies.txt')
+    
+    # تشغيل yt-dlp من خلال subprocess
+    run_yt_dlp(url, cookies_path)
+    
     try:
-        cookies_path = os.path.join(os.path.dirname(__file__), 'cookies.txt')  # تأكد من المسار الصحيح
         ydl_opts = {
             'cookies': cookies_path,
         }
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info_dict = ydl.extract_info(url, download=False)
             formats = info_dict.get('formats', [])
-
-        # سجل جميع الصيغ للتأكد من التفاصيل
-        print("Available formats:", formats)
-
-        # قم بإضافة تفاصيل الصيغ لتكون واضحة
+        
         format_list = [
             {
                 "format_id": f.get("format_id", "unknown"),
@@ -41,7 +55,7 @@ def get_formats():
                 "format_note": f.get("format_note", "No additional notes"),
             }
             for f in formats
-            if f.get("vcodec", "none") != "none"  # فقط للفيديوهات التي تحتوي على كوديك فيديو
+            if f.get("vcodec", "none") != "none"
         ]
 
         return jsonify(format_list)
