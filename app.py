@@ -6,16 +6,6 @@ import subprocess
 
 app = Flask(__name__)
 
-# المسار الذي سيتم حفظ الفيديوهات فيه
-DOWNLOAD_PATH = os.path.join(os.path.dirname(__file__), 'uploads')
-if not os.path.exists(DOWNLOAD_PATH):
-    os.makedirs(DOWNLOAD_PATH)
-
-@app.route('/')
-def index():
-    return render_template('index.html')  # صفحة HTML تحتوي على حقل إدخال وزر للتنزيل
-
-
 cookies_path = os.path.join(os.path.dirname(__file__), 'cookies.txt')
 log_file_path = os.path.join(os.path.dirname(__file__), 'log.txt')  # مسار ملف السجل
 
@@ -36,6 +26,16 @@ def check_cookies_file():
 if not check_cookies_file():
     # إذا كان ملف الكوكيز مفقودًا، يمكن إنهاء العملية هنا أو المتابعة بناءً على متطلباتك
     exit(1)
+
+
+# المسار الذي سيتم حفظ الفيديوهات فيه
+DOWNLOAD_PATH = os.path.join(os.path.dirname(__file__), 'uploads')
+if not os.path.exists(DOWNLOAD_PATH):
+    os.makedirs(DOWNLOAD_PATH)
+
+@app.route('/')
+def index():
+    return render_template('index.html')  # صفحة HTML تحتوي على حقل إدخال وزر للتنزيل
 
 
 @app.route('/get_formats')
