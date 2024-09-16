@@ -12,19 +12,20 @@ log_file_path = '/workspace/log.txt'  # مسار ملف السجل
 # التحقق من وجود ملف الكوكيز
 def check_cookies_file():
     if not os.path.exists(cookies_path):
-        # طباعة رسالة بأن الملف مفقود
-        print("ملف الكوكيز مفقود")
+    # طباعة رسالة بأن الملف مفقود
+    print("ملف الكوكيز مفقود")
+    
+    # إنشاء ملف السجل وكتابة الرسالة فيه
+    with open(log_file_path, 'a') as log_file:
+        log_file.write("ملف الكوكيز مفقود\n")
+    
+    return False
+else:
+    with open(log_file_path, 'a') as log_file:
+        log_file.write("ملف الكوكيز موجود\n")
         
-        # إنشاء ملف السجل وكتابة الرسالة فيه
-        with open(log_file_path, 'a') as log_file:
-            log_file.write("ملف الكوكيز مفقود\n")
-        
-        return False
-    else 
-        with open(log_file_path, 'a') as log_file:
-            log_file.write("ملف الكوكيز موجود\n")
-            
     return True
+
 
 # استدعاء التحقق من ملف الكوكيز قبل بدء العمليات
 if not check_cookies_file():
