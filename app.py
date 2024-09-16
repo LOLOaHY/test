@@ -24,7 +24,7 @@ def check_cookies_file():
         with open(log_file_path, 'a') as log_file:
             log_file.write("yes coockies\n")
         
-    return True
+        return True
 
 
 # استدعاء التحقق من ملف الكوكيز قبل بدء العمليات
