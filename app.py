@@ -66,12 +66,13 @@ def get_formats():
     if not url:
         return jsonify({'error': 'رابط الفيديو مفقود'}), 400
 
-    cookies_path = os.path.join(os.path.dirname(__file__), 'cookies.txt')
+   
     
     
     try:
         ydl_opts = {
-            'cookies': cookies,
+            'username': 'ejekdjdjed@gmail.com',  # بريدك الإلكتروني في Google
+            'password': 'asdfghjkl22@hotmail.com',
             
         }
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -104,13 +105,13 @@ def download_video():
 
     try:
         # إعدادات yt-dlp لتنزيل الفيديو والصوت
-        cookies_path = os.path.join(os.path.dirname(__file__), 'cookies.txt')
+       
         ydl_opts = {
+            'username': 'ejekdjdjed@gmail.com',  # بريدك الإلكتروني في Google
+            'password': 'asdfghjkl22@hotmail.com',
             'outtmpl': os.path.join(DOWNLOAD_PATH, '%(title)s.%(ext)s'),
             'format': f'{format_id}+bestaudio/best',
             'merge_output_format': 'mp4',
-            'cookies':cookies,
-            
         }
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
