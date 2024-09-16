@@ -16,20 +16,26 @@ def index():
     return render_template('index.html')  # صفحة HTML تحتوي على حقل إدخال وزر للتنزيل
 
 
+cookies_path = os.path.join(os.path.dirname(__file__), 'cookies.txt')
+log_file_path = os.path.join(os.path.dirname(__file__), 'log.txt')  # مسار ملف السجل
 
-def run_yt_dlp(url, cookies_path):
-    try:
-        result = subprocess.run(
-            ['yt-dlp', '--cookies', cookies_path, url],
-            capture_output=True,
-            text=True
-        )
-        print("Standard Output:", result.stdout)
-        print("Error Output:", result.stderr)
-        if result.returncode != 0:
-            raise Exception(f"yt-dlp failed with code {result.returncode}")
-    except Exception as e:
-        print(f"Error: {str(e)}")
+# التحقق من وجود ملف الكوكيز
+def check_cookies_file():
+    if not os.path.exists(cookies_path):
+        # طباعة رسالة بأن الملف مفقود
+        print("ملف الكوكيز مفقود")
+        
+        # إنشاء ملف السجل وكتابة الرسالة فيه
+        with open(log_file_path, 'a') as log_file:
+            log_file.write("ملف الكوكيز مفقود\n")
+        
+        return False
+    return True
+
+# استدعاء التحقق من ملف الكوكيز قبل بدء العمليات
+if not check_cookies_file():
+    # إذا كان ملف الكوكيز مفقودًا، يمكن إنهاء العملية هنا أو المتابعة بناءً على متطلباتك
+    exit(1)
 
 
 @app.route('/get_formats')
@@ -40,14 +46,11 @@ def get_formats():
 
     cookies_path = os.path.join(os.path.dirname(__file__), 'cookies.txt')
     
-    # تشغيل yt-dlp من خلال subprocess
-    run_yt_dlp(url, cookies_path)
     
     try:
         ydl_opts = {
             'cookies': cookies_path,
-            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36',
-
+            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36'
         }
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info_dict = ydl.extract_info(url, download=False)
@@ -81,13 +84,11 @@ def download_video():
         # إعدادات yt-dlp لتنزيل الفيديو والصوت
         cookies_path = os.path.join(os.path.dirname(__file__), 'cookies.txt')
         ydl_opts = {
-            
             'outtmpl': os.path.join(DOWNLOAD_PATH, '%(title)s.%(ext)s'),
             'format': f'{format_id}+bestaudio/best',
             'merge_output_format': 'mp4',
             'cookies':cookies_path,
-            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36',
-
+            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36'
         }
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
