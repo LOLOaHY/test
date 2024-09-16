@@ -32,6 +32,23 @@ if not check_cookies_file():
     # إذا كان ملف الكوكيز مفقودًا، يمكن إنهاء العملية هنا أو المتابعة بناءً على متطلباتك
     exit(1)
 
+# دالة لتحويل ملف الكوكيز إلى قاموس
+def load_cookies_from_file(file_path):
+    cookies = {}
+    if os.path.exists(file_path):
+        with open(file_path, 'r') as f:
+            for line in f:
+                if not line.startswith('#') and line.strip():  # تجاهل التعليقات والأسطر الفارغة
+                    parts = line.strip().split('\t')
+                    if len(parts) >= 7:
+                        domain = parts[0]
+                        cookie_name = parts[5]
+                        cookie_value = parts[6]
+                        cookies[cookie_name] = cookie_value
+    return cookies
+
+# تحميل الكوكيز من ملف
+cookies = load_cookies_from_file(cookies_path)
 
 # المسار الذي سيتم حفظ الفيديوهات فيه
 DOWNLOAD_PATH = os.path.join(os.path.dirname(__file__), 'uploads')
@@ -54,8 +71,8 @@ def get_formats():
     
     try:
         ydl_opts = {
-            'cookies': cookies_path,
-            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36'
+            'cookies': cookies,
+            
         }
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info_dict = ydl.extract_info(url, download=False)
@@ -92,8 +109,8 @@ def download_video():
             'outtmpl': os.path.join(DOWNLOAD_PATH, '%(title)s.%(ext)s'),
             'format': f'{format_id}+bestaudio/best',
             'merge_output_format': 'mp4',
-            'cookies':cookies_path,
-            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36'
+            'cookies':cookies,
+            
         }
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
