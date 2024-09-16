@@ -7,7 +7,7 @@ import subprocess
 app = Flask(__name__)
 
 cookies_path = os.path.join(os.path.dirname(__file__), 'cookies.txt')
-log_file_path = '/workspace/log.txt')  # مسار ملف السجل
+log_file_path = '/workspace/log.txt'  # مسار ملف السجل
 
 # التحقق من وجود ملف الكوكيز
 def check_cookies_file():
