@@ -71,8 +71,7 @@ def get_formats():
     
     try:
         ydl_opts = {
-            'username': 'ejekdjdjed@gmail.com',  # بريدك الإلكتروني في Google
-            'password': 'asdfghjkl22@hotmail.com',
+           'cookiefile':'/workspace/cookies.txt',
             
         }
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -107,11 +106,11 @@ def download_video():
         # إعدادات yt-dlp لتنزيل الفيديو والصوت
        
         ydl_opts = {
-            'username': 'ejekdjdjed@gmail.com',  # بريدك الإلكتروني في Google
-            'password': 'asdfghjkl22@hotmail.com',
+            
             'outtmpl': os.path.join(DOWNLOAD_PATH, '%(title)s.%(ext)s'),
             'format': f'{format_id}+bestaudio/best',
             'merge_output_format': 'mp4',
+            'cookiefile':'/workspace/cookies.txt',
         }
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
