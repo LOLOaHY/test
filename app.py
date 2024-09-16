@@ -24,10 +24,13 @@ def run_yt_dlp(url, cookies_path):
             capture_output=True,
             text=True
         )
-        print(result.stdout)
-        print(result.stderr)
+        print("Standard Output:", result.stdout)
+        print("Error Output:", result.stderr)
+        if result.returncode != 0:
+            raise Exception(f"yt-dlp failed with code {result.returncode}")
     except Exception as e:
         print(f"Error: {str(e)}")
+
 
 @app.route('/get_formats')
 def get_formats():
@@ -43,6 +46,8 @@ def get_formats():
     try:
         ydl_opts = {
             'cookies': cookies_path,
+            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36',
+
         }
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info_dict = ydl.extract_info(url, download=False)
@@ -81,6 +86,8 @@ def download_video():
             'format': f'{format_id}+bestaudio/best',
             'merge_output_format': 'mp4',
             'cookies':cookies_path,
+            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36',
+
         }
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
