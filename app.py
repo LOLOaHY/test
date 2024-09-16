@@ -2,53 +2,8 @@ from flask import Flask, request, jsonify, render_template, send_from_directory,
 import yt_dlp
 import os
 import ffmpeg
-import subprocess
 
 app = Flask(__name__)
-
-cookies_path = '/workspace/cookies.txt'
-log_file_path = '/workspace/log.txt'  # مسار ملف السجل
-
-# التحقق من وجود ملف الكوكيز
-def check_cookies_file():
-    if not os.path.exists(cookies_path):
-    # طباعة رسالة بأن الملف مفقود
-        print("no coockis")
-        
-        # إنشاء ملف السجل وكتابة الرسالة فيه
-        with open(log_file_path, 'a') as log_file:
-            log_file.write("no coockis\n")
-        
-        return False
-    else:
-        with open(log_file_path, 'a') as log_file:
-            log_file.write("yes coockies\n")
-        
-        return True
-
-
-# استدعاء التحقق من ملف الكوكيز قبل بدء العمليات
-if not check_cookies_file():
-    # إذا كان ملف الكوكيز مفقودًا، يمكن إنهاء العملية هنا أو المتابعة بناءً على متطلباتك
-    exit(1)
-
-# دالة لتحويل ملف الكوكيز إلى قاموس
-def load_cookies_from_file(file_path):
-    cookies = {}
-    if os.path.exists(file_path):
-        with open(file_path, 'r') as f:
-            for line in f:
-                if not line.startswith('#') and line.strip():  # تجاهل التعليقات والأسطر الفارغة
-                    parts = line.strip().split('\t')
-                    if len(parts) >= 7:
-                        domain = parts[0]
-                        cookie_name = parts[5]
-                        cookie_value = parts[6]
-                        cookies[cookie_name] = cookie_value
-    return cookies
-
-# تحميل الكوكيز من ملف
-cookies = load_cookies_from_file(cookies_path)
 
 # المسار الذي سيتم حفظ الفيديوهات فيه
 DOWNLOAD_PATH = os.path.join(os.path.dirname(__file__), 'uploads')
@@ -59,25 +14,22 @@ if not os.path.exists(DOWNLOAD_PATH):
 def index():
     return render_template('index.html')  # صفحة HTML تحتوي على حقل إدخال وزر للتنزيل
 
-
 @app.route('/get_formats')
 def get_formats():
     url = request.args.get('url')
     if not url:
         return jsonify({'error': 'رابط الفيديو مفقود'}), 400
 
-   
-    
-    
     try:
-        ydl_opts = {
-           'cookiefile':'/workspace/cookies.txt',
-            
-        }
+        ydl_opts = {'cookiefile':'/workspace/cookies.txt',}
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info_dict = ydl.extract_info(url, download=False)
             formats = info_dict.get('formats', [])
-        
+
+        # سجل جميع الصيغ للتأكد من التفاصيل
+        print("Available formats:", formats)
+
+        # قم بإضافة تفاصيل الصيغ لتكون واضحة
         format_list = [
             {
                 "format_id": f.get("format_id", "unknown"),
@@ -86,7 +38,7 @@ def get_formats():
                 "format_note": f.get("format_note", "No additional notes"),
             }
             for f in formats
-            if f.get("vcodec", "none") != "none"
+            if f.get("vcodec", "none") != "none"  # فقط للفيديوهات التي تحتوي على كوديك فيديو
         ]
 
         return jsonify(format_list)
@@ -104,13 +56,11 @@ def download_video():
 
     try:
         # إعدادات yt-dlp لتنزيل الفيديو والصوت
-       
         ydl_opts = {
-            
+            'cookiefile':'/workspace/cookies.txt',
             'outtmpl': os.path.join(DOWNLOAD_PATH, '%(title)s.%(ext)s'),
             'format': f'{format_id}+bestaudio/best',
             'merge_output_format': 'mp4',
-            'cookiefile':'/workspace/cookies.txt',
         }
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
