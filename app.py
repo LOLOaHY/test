@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify, render_template, send_from_directory,
 import yt_dlp
 import os
 import ffmpeg
+import subprocess
 
 app = Flask(__name__)
 
@@ -14,7 +15,7 @@ if not os.path.exists(DOWNLOAD_PATH):
 def index():
     return render_template('index.html')  # صفحة HTML تحتوي على حقل إدخال وزر للتنزيل
 
-import subprocess
+
 
 def run_yt_dlp(url, cookies_path):
     try:
@@ -44,7 +45,7 @@ def get_formats():
             'cookies': cookies_path,
         }
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            info_dict = ydl.extract_info(url, download=False)
+            info_dict = ydl.extract_info('cookies': cookies_path,url, download=False)
             formats = info_dict.get('formats', [])
         
         format_list = [
