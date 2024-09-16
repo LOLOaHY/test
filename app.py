@@ -20,9 +20,9 @@ def check_cookies_file():
         log_file.write("ملف الكوكيز مفقود\n")
     
     return False
-else:
-    with open(log_file_path, 'a') as log_file:
-        log_file.write("ملف الكوكيز موجود\n")
+    else:
+        with open(log_file_path, 'a') as log_file:
+            log_file.write("ملف الكوكيز موجود\n")
         
     return True
 
